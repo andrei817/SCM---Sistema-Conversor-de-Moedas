@@ -1,1 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Sistema Conversor de Moedas</title>
+</head>
+<body>
+    <div class="container">
+        <h1> Sistema Conversor de Moedas </h1>
+        <form action="#" method="POST">
 
+            <div class="currency-row"> 
+                    <div class="currency-input">
+                        <label> Digite um valor: </label>
+                            <input type="text" name="valor" id="numero" required>
+                            <script>
+                                document.getElementById("numero").addEventListener("input", function () {
+                                this.value = this.value.replace(",", ".").replace(/[^0-9.]/g, "");
+                            });
+                            </script>
+                     </div>
+
+                     <div class="currency-select">
+                        <label>De:</label>
+                        <select name="moeda_origem" required>
+                            {% for codigo in moedas %}
+                                <option value="{{ codigo }}"
+                                    {% if codigo == moeda_origem %}selected{% endif %}>
+                                    {{ codigo }} - {{ nomes[codigo] }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        
+                    </div>
+            
+                    <div class="currency-select">
+                        <label>Para:</label>
+                        <select name="moeda_destino" required>
+                            {% for codigo in moedas %}
+                                <option value="{{ codigo }}"
+                                    {% if codigo == moeda_destino %}selected{% endif %}>
+                                    {{ codigo }} - {{ nomes[codigo] }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        
+                    </div>
+            
+                    <div class="currency-input">
+                        <label>Resultado:</label>
+                        <input type="text" placeholder="#" value="{{ simbolo }} {{ resultado }}" readonly>
+                    </div>
+            </div>
+        
+            <button type="submit" id="btnConverter"> Converter </button>
+
+            <div class="loading" id="carregando">
+                <div class="Spinner"> </div>
+                    <p>
+                        Buscando Cotação...
+                    </p>
+                
+            </div>
+
+            <script>
+                const form = document.querySelector("form");
+                const loading = document.getElementById("carregando");
+                const result = document.getElementById("result");
+
+                form.addEventListener("submit", () => {
+                    loading.style.display = "flex";
+                    result.style.display = "none";
+                });
+            </script>
+
+            <div class="result" id="result">
+            {% if resultado %}
+                <script>
+                    document.getElementById("carregando").style.display = "none";
+                    document.getElementById("result").style.display = "block";
+                </script>
+                <span>Valor: {{ simbolo }} {{ resultado }} </span>
+            {% endif %}
+        </div>
+
+        </form>
+    </div>
+</body>
+</html>
